@@ -92,7 +92,6 @@
             color: #dc3545; /* Red */
         }
 
-        /* Slide toggle styles */
         .theme-toggle {
             position: relative;
             display: inline-block;
@@ -138,7 +137,6 @@
             color: black;
         }
 
-        /* Additional styling for better UX */
         .product-type {
             margin-bottom: 15px;
         }
@@ -154,8 +152,8 @@
     <div class="product-type">
         <label for="productType">Select Product Type</label>
         <select id="productType">
+            <option value="other" selected>Other Product</option>
             <option value="textile">Textile and Bedding</option>
-            <option value="other">Other Product</option>
         </select>
     </div>
 
@@ -192,6 +190,8 @@
     </div>
 
     <div class="result" id="result"></div>
+
+    <footer style="text-align: center; margin-top: 20px;">All rights reserved by Adnan.</footer>
 </div>
 
 <script>
@@ -260,30 +260,25 @@
         let result;
         if (productType === "textile") {
             result = textileAndBeddingLogic(temuCm, rightCm);
-        } else if (productType === "other") {
+        } else { // Default to "other"
             result = otherProductLogic(temuCm, rightCm);
-        } else {
-            result = "Invalid product type selected.";
         }
 
         // Format the result to two decimal places
-        const formattedTemuCm = temuCm.toFixed(2);
-        const formattedRightCm = rightCm.toFixed(2);
+        const formattedTemu = temuCm.toFixed(2);
+        const formattedRight = rightCm.toFixed(2);
 
-        // Display the result with bold styling
-        document.getElementById('result').innerHTML = `
-            <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">Result: ${result}</span> |
-            Temu Side (in cm): ${formattedTemuCm} |
-            Right Side (in cm): ${formattedRightCm}
-        `;
+        document.getElementById('result').innerText = `Temu Side: ${formattedTemu} cm, Right Side: ${formattedRight} cm - Result: ${result}`;
     });
 
     // Theme toggle function
     function toggleTheme() {
         const body = document.body;
+        const container = document.getElementById('container');
         body.classList.toggle('light-mode');
-        body.classList.toggle('dark-mode');
+        container.classList.toggle('dark-mode');
     }
 </script>
+
 </body>
 </html>
