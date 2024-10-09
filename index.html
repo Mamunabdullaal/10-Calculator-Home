@@ -154,8 +154,8 @@
     <div class="product-type">
         <label for="productType">Select Product Type</label>
         <select id="productType">
-            <option value="other">Other Product</option>
             <option value="textile">Textile and Bedding</option>
+            <option value="other">Other Product</option>
         </select>
     </div>
 
@@ -192,10 +192,6 @@
     </div>
 
     <div class="result" id="result"></div>
-
-    <footer style="text-align: center; margin-top: 20px;">
-        <p>All rights reserved by Adnan.</p>
-    </footer>
 </div>
 
 <script>
@@ -270,9 +266,16 @@
             result = "Invalid product type selected.";
         }
 
-        // Display the result
-        document.getElementById('result').innerText = `Result: ${result}`;
-        document.getElementById('result').className = result === 'Same' ? 'result same' : 'result not-same';
+        // Format the result to two decimal places
+        const formattedTemuCm = temuCm.toFixed(2);
+        const formattedRightCm = rightCm.toFixed(2);
+
+        // Display the result with bold styling
+        document.getElementById('result').innerHTML = `
+            <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">Result: ${result}</span> |
+            Temu Side (in cm): ${formattedTemuCm} |
+            Right Side (in cm): ${formattedRightCm}
+        `;
     });
 
     // Theme toggle function
@@ -282,6 +285,5 @@
         body.classList.toggle('dark-mode');
     }
 </script>
-
 </body>
 </html>
