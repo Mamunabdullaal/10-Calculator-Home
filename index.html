@@ -143,12 +143,6 @@
             margin-bottom: 15px;
         }
 
-        footer {
-            text-align: center;
-            margin-top: 20px;
-            color: #fff;
-        }
-
     </style>
 </head>
 <body class="dark-mode">
@@ -199,8 +193,8 @@
 
     <div class="result" id="result"></div>
 
-    <footer>
-        All rights reserved by Adnan
+    <footer style="text-align: center; margin-top: 20px;">
+        <p>All rights reserved by Adnan.</p>
     </footer>
 </div>
 
@@ -270,14 +264,15 @@
         let result;
         if (productType === "textile") {
             result = textileAndBeddingLogic(temuCm, rightCm);
-        } else {
+        } else if (productType === "other") {
             result = otherProductLogic(temuCm, rightCm);
+        } else {
+            result = "Invalid product type selected.";
         }
 
-        // Display result
-        const resultDiv = document.getElementById('result');
-        resultDiv.className = result === 'Same' ? 'result same' : 'result not-same';
-        resultDiv.innerText = `Result: ${result}`;
+        // Display the result
+        document.getElementById('result').innerText = `Result: ${result}`;
+        document.getElementById('result').className = result === 'Same' ? 'result same' : 'result not-same';
     });
 
     // Theme toggle function
@@ -287,5 +282,6 @@
         body.classList.toggle('dark-mode');
     }
 </script>
+
 </body>
 </html>
