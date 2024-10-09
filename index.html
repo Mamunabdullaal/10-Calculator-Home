@@ -143,6 +143,12 @@
             margin-bottom: 15px;
         }
 
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #fff;
+        }
+
     </style>
 </head>
 <body class="dark-mode">
@@ -154,8 +160,8 @@
     <div class="product-type">
         <label for="productType">Select Product Type</label>
         <select id="productType">
+            <option value="other">Other Product</option>
             <option value="textile">Textile and Bedding</option>
-            <option value="other" selected>Other Product</option>
         </select>
     </div>
 
@@ -192,6 +198,10 @@
     </div>
 
     <div class="result" id="result"></div>
+
+    <footer>
+        All rights reserved by Adnan
+    </footer>
 </div>
 
 <script>
@@ -257,25 +267,24 @@
         const temuCm = convertToCm(temuValue, temuUnit);
         const rightCm = convertToCm(rightValue, rightUnit);
 
-        let comparisonResult;
-
-        // Determine logic based on product type
+        let result;
         if (productType === "textile") {
-            comparisonResult = textileAndBeddingLogic(temuCm, rightCm);
+            result = textileAndBeddingLogic(temuCm, rightCm);
         } else {
-            comparisonResult = otherProductLogic(temuCm, rightCm);
+            result = otherProductLogic(temuCm, rightCm);
         }
 
-        // Show result
-        document.getElementById('result').innerHTML = `Result: <span class="${comparisonResult === 'Same' ? 'same' : 'not-same'}">${comparisonResult}</span>`;
+        // Display result
+        const resultDiv = document.getElementById('result');
+        resultDiv.className = result === 'Same' ? 'result same' : 'result not-same';
+        resultDiv.innerText = `Result: ${result}`;
     });
 
     // Theme toggle function
     function toggleTheme() {
-        document.body.classList.toggle('light-mode');
-        document.getElementById('container').classList.toggle('light-mode');
-        const toggleThumb = document.querySelector('.toggle-thumb');
-        toggleThumb.classList.toggle('light-mode');
+        const body = document.body;
+        body.classList.toggle('light-mode');
+        body.classList.toggle('dark-mode');
     }
 </script>
 </body>
