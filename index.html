@@ -155,7 +155,7 @@
         <label for="productType">Select Product Type</label>
         <select id="productType">
             <option value="textile">Textile and Bedding</option>
-            <option value="other">Other Product</option>
+            <option value="other" selected>Other Product</option>
         </select>
     </div>
 
@@ -257,32 +257,25 @@
         const temuCm = convertToCm(temuValue, temuUnit);
         const rightCm = convertToCm(rightValue, rightUnit);
 
-        let result;
+        let comparisonResult;
+
+        // Determine logic based on product type
         if (productType === "textile") {
-            result = textileAndBeddingLogic(temuCm, rightCm);
-        } else if (productType === "other") {
-            result = otherProductLogic(temuCm, rightCm);
+            comparisonResult = textileAndBeddingLogic(temuCm, rightCm);
         } else {
-            result = "Invalid product type selected.";
+            comparisonResult = otherProductLogic(temuCm, rightCm);
         }
 
-        // Format the result to two decimal places
-        const formattedTemuCm = temuCm.toFixed(2);
-        const formattedRightCm = rightCm.toFixed(2);
-
-        // Display the result with bold styling
-        document.getElementById('result').innerHTML = `
-            <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">Result: ${result}</span> |
-            Temu Side (in cm): ${formattedTemuCm} |
-            Right Side (in cm): ${formattedRightCm}
-        `;
+        // Show result
+        document.getElementById('result').innerHTML = `Result: <span class="${comparisonResult === 'Same' ? 'same' : 'not-same'}">${comparisonResult}</span>`;
     });
 
     // Theme toggle function
     function toggleTheme() {
-        const body = document.body;
-        body.classList.toggle('light-mode');
-        body.classList.toggle('dark-mode');
+        document.body.classList.toggle('light-mode');
+        document.getElementById('container').classList.toggle('light-mode');
+        const toggleThumb = document.querySelector('.toggle-thumb');
+        toggleThumb.classList.toggle('light-mode');
     }
 </script>
 </body>
