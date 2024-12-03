@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unit Converter & 10% Calculator</title>
     <style>
-        /* Same styling as before */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -199,11 +198,16 @@
     }
 
     function textileAndBeddingLogic(temuCm, rightCm) {
-        const temu10Percent = temuCm * 0.10;
-        const upperLimit = temuCm + temu10Percent;
-        const lowerLimit = temuCm - temu10Percent;
+        if (temuCm <= 30) {
+            const temu10Percent = temuCm * 0.10;
+            const upperLimit = temuCm + temu10Percent;
+            const lowerLimit = temuCm - temu10Percent;
 
-        return (rightCm >= lowerLimit && rightCm <= upperLimit) ? 'Same' : 'Not Same';
+            return (rightCm >= lowerLimit && rightCm <= upperLimit) ? 'Same' : 'Not Same';
+        } else {
+            const difference = Math.abs(temuCm - rightCm);
+            return difference <= 3 ? 'Same' : 'Not Same';
+        }
     }
 
     function industryLogic(temuCm, rightCm) {
@@ -229,20 +233,18 @@
         const temuCm = convertToCm(temuValue, temuUnit);
         const rightCm = convertToCm(rightValue, rightUnit);
 
-        let result, percentage;
+        let result;
 
         if (productType === 'textile') {
             result = textileAndBeddingLogic(temuCm, rightCm);
-            percentage = null;
         } else if (productType === 'other') {
             const industryResult = industryLogic(temuCm, rightCm);
             result = industryResult.result;
-            percentage = industryResult.percentage;
         }
 
         document.getElementById('result').innerHTML = `
             <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">
-                Result: ${result}${percentage ? ` (${percentage}%)` : ''}
+                Result: ${result}
             </span> |
             Temu Side (in cm): ${temuCm.toFixed(2)} |
             Right Side (in cm): ${rightCm.toFixed(2)}
