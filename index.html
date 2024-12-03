@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unit Converter & 10% Calculator</title>
     <style>
+        /* Same styling as before */
         body {
             font-family: Arial, sans-serif;
             display: flex;
@@ -92,7 +93,6 @@
             color: #dc3545; /* Red */
         }
 
-        /* Slide toggle styles */
         .theme-toggle {
             position: relative;
             display: inline-block;
@@ -121,7 +121,7 @@
         }
 
         .dark-mode .toggle-thumb {
-            left: 23px; /* Slide to the right */
+            left: 23px;
         }
 
         .light-mode {
@@ -137,12 +137,6 @@
         .light-mode h2, .light-mode label {
             color: black;
         }
-
-        /* Additional styling for better UX */
-        .product-type {
-            margin-bottom: 15px;
-        }
-
     </style>
 </head>
 <body class="dark-mode">
@@ -150,14 +144,11 @@
 <div class="container" id="container">
     <h2>Unit Converter & 10% Calculator</h2>
 
-    <!-- Dropdown to choose the product type -->
-    <div class="product-type">
-        <label for="productType">Select Product Type</label>
-        <select id="productType">
-            <option value="textile">Textile and Bedding</option>
-            <option value="other">Other Product</option>
-        </select>
-    </div>
+    <label for="productType">Select Product Type</label>
+    <select id="productType">
+        <option value="textile">10% Upto 3cm</option>
+        <option value="other">10% Industry</option>
+    </select>
 
     <label for="temuValue">Temu Side Value</label>
     <input type="number" id="temuValue" placeholder="Enter value">
@@ -185,7 +176,7 @@
         <option value="yd">Yards (yd)</option>
     </select>
 
-    <button id="calculateBtn" tabindex="0">Calculate</button>
+    <button id="calculateBtn">Calculate</button>
 
     <div class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
         <div class="toggle-thumb"></div>
@@ -195,7 +186,6 @@
 </div>
 
 <script>
-    // Unit conversion function for various units to cm
     function convertToCm(value, unit) {
         const conversionFactors = {
             'm': 100,
@@ -208,40 +198,23 @@
         return value * conversionFactors[unit];
     }
 
-    // Function for Textile and Bedding logic
     function textileAndBeddingLogic(temuCm, rightCm) {
-        if (temuCm >= 30) {
-            // Apply ±3 cm logic
-            let upperLimit = temuCm + 3;
-            let lowerLimit = temuCm - 3;
-            return (rightCm <= upperLimit && rightCm >= lowerLimit) ? 'Same' : 'Not Same';
-        } else {
-            // Apply ±10% logic for values below 30 cm
-            let temu10Percent = temuCm * 0.10;
-            let upperLimit = temuCm + temu10Percent;
-            let lowerLimit = temuCm - temu10Percent;
-            return (rightCm <= upperLimit && rightCm >= lowerLimit) ? 'Same' : 'Not Same';
-        }
+        const temu10Percent = temuCm * 0.10;
+        const upperLimit = temuCm + temu10Percent;
+        const lowerLimit = temuCm - temu10Percent;
+
+        return (rightCm >= lowerLimit && rightCm <= upperLimit) ? 'Same' : 'Not Same';
     }
 
-    // Function for Other Product logic
-    function otherProductLogic(temuCm, rightCm) {
-        if (temuCm >= 50) {
-            // Apply ±5 cm logic
-            let upperLimit = temuCm + 5;
-            let lowerLimit = temuCm - 5;
-            return (rightCm <= upperLimit && rightCm >= lowerLimit) ? 'Same' : 'Not Same';
-        } else {
-            // Apply ±10% logic for values below 50 cm
-            let temu10Percent = temuCm * 0.10;
-            let upperLimit = temuCm + temu10Percent;
-            let lowerLimit = temuCm - temu10Percent;
-            return (rightCm <= upperLimit && rightCm >= lowerLimit) ? 'Same' : 'Not Same';
-        }
+    function industryLogic(temuCm, rightCm) {
+        const percentageDifference = Math.abs((temuCm - rightCm) / temuCm) * 100;
+        return {
+            result: percentageDifference <= 10 ? 'Same' : 'Not Same',
+            percentage: percentageDifference.toFixed(2)
+        };
     }
 
-    // Main function to handle the conversion and comparison
-    document.getElementById('calculateBtn').addEventListener('click', function() {
+    document.getElementById('calculateBtn').addEventListener('click', function () {
         const temuValue = parseFloat(document.getElementById('temuValue').value);
         const temuUnit = document.getElementById('temuUnit').value;
         const rightValue = parseFloat(document.getElementById('rightValue').value);
@@ -253,32 +226,29 @@
             return;
         }
 
-        // Convert both values to cm
         const temuCm = convertToCm(temuValue, temuUnit);
         const rightCm = convertToCm(rightValue, rightUnit);
 
-        let result;
-        if (productType === "textile") {
+        let result, percentage;
+
+        if (productType === 'textile') {
             result = textileAndBeddingLogic(temuCm, rightCm);
-        } else if (productType === "other") {
-            result = otherProductLogic(temuCm, rightCm);
-        } else {
-            result = "Invalid product type selected.";
+            percentage = null;
+        } else if (productType === 'other') {
+            const industryResult = industryLogic(temuCm, rightCm);
+            result = industryResult.result;
+            percentage = industryResult.percentage;
         }
 
-        // Format the result to two decimal places
-        const formattedTemuCm = temuCm.toFixed(2);
-        const formattedRightCm = rightCm.toFixed(2);
-
-        // Display the result with bold styling
         document.getElementById('result').innerHTML = `
-            <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">Result: ${result}</span> |
-            Temu Side (in cm): ${formattedTemuCm} |
-            Right Side (in cm): ${formattedRightCm}
+            <span class="bold-result ${result === 'Same' ? 'same' : 'not-same'}">
+                Result: ${result}${percentage ? ` (${percentage}%)` : ''}
+            </span> |
+            Temu Side (in cm): ${temuCm.toFixed(2)} |
+            Right Side (in cm): ${rightCm.toFixed(2)}
         `;
     });
 
-    // Theme toggle function
     function toggleTheme() {
         const body = document.body;
         body.classList.toggle('light-mode');
